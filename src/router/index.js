@@ -8,12 +8,22 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
+    props: true
   },
   {
-    path: "/details/:id",
+    path: "/destination/:slug",
     name: "DestinationDetails",
-    component: () => import(/* webpackChunkName: "DestinationDetails" */'../views/DestinationDetails.vue')
+    props: true,
+    component: () => import(/* webpackChunkName: "DestinationDetails" */'../views/DestinationDetails.vue'),
+    children:[
+      {
+        path: ":experienceSlug",
+        name: "experienceDetails",
+        props: true,
+        component: () => import(/* webpackChunkName: "DestinationDetails" */'../views/ExperienceDetails.vue'),
+      }
+    ]
   },
 ];
 

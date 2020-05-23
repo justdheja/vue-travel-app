@@ -1,4 +1,5 @@
 <template>
+<div>
   <section class="destination">
     <h1>
       {{ destination.name }}
@@ -8,20 +9,45 @@
       <p>{{destination.description}}</p>
     </div>
   </section>
+  <section class="experiences">
+    <h2>Top Experiences in {{destination.name}}</h2>
+    <div class="cards">
+      <div 
+      v-for="experience in destination.experiences"
+      :key="experience.slug"
+      class="card">
+      <router-link :to="{
+        name: 'experienceDetails',
+        params: { experienceSlug: experience.slug }
+      }">
+        <img :src="require(`@/assets/${experience.image}`)" :alt="experience.name">
+        <span class="card__text">
+          {{experience.name}}
+        </span>
+      </router-link>
+      </div>
+    </div>
+    <router-view :key="$route.path"></router-view>
+  </section>
+</div>
 </template>
 
 <script>
 import store from '../store'
 export default {
   data() {
-    return {
-      destinationID:this.$route.params.id
+    return {}
+  },
+  props:{
+    slug: {
+      type: String,
+      required: true
     }
   },
   computed: {
     destination(){
       return store.destinations.find(
-        destination => destination.id === this.destinationID
+        destination => destination.slug === this.slug
       )
     }
   },
@@ -30,18 +56,38 @@ export default {
 
 <style scoped>
 img {
-  max-width: 600px;
-  height: auto;
-  width: 100%;
-  max-height: 400px;
+max-width: 600px;
+height: auto;
+width: 100%;
+max-height: 400px;
 }
 .destination-details {
-  display: flex;
-  justify-content: space-between;
+display: flex;
+justify-content: space-between;
 }
 p {
-  margin: 0 40px;
-  font-size: 20px;
-  text-align: left;
+margin: 0 40px;
+font-size: 20px;
+text-align: left;
+}
+.cards {
+display: flex;
+}
+.cards img {
+max-height: 200px;
+}
+.card {
+padding: 0 20px;
+position: relative;
+}
+.card__text {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: white;
+font-size: 25px;
+font-weight: bold;
+text-decoration: none;
 }
 </style>
